@@ -47,6 +47,12 @@ public class DoctorsApi {
 	  return doctorService.getDoctorAccount(id);
 	   }
 	 
+	 
+	 @GetMapping("speciality/{id}")                                             // get mapping annotation
+	  public List<Doctors> getBySpecialities(@PathVariable (value="id") String specialities) {
+	  return doctorService.getDoctorsBySpecialities(specialities);
+	   }
+	 
 	 @PostMapping(value = "/login")
 	 public ResponseEntity<String> login(@RequestBody Doctors doctor) {
 		 

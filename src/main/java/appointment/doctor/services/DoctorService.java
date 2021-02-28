@@ -130,5 +130,14 @@ public ResponseEntity<String> deleteDoctorAccount(String id){
 
 
 
+public List<Doctors> getDoctorsBySpecialities(String specialities) {
+	
+//	return this.find(specialities);
+	return doctorsRepository.findBySpecialization(specialities);
+	
+}
+
+
+
 }
 

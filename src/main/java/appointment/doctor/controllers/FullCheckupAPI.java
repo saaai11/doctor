@@ -21,7 +21,7 @@ import appointment.doctor.repository.CheckupsRepository;
 import appointment.doctor.services.FullCheckupService;
 
 @RestController
-@RequestMapping("/pro-Medico/checkup/")
+@RequestMapping("/pro-Medico/checkups")
 public class FullCheckupAPI {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class FullCheckupAPI {
 	  return fullCheckupService.getAll();
 	   }
 	 
-	 @GetMapping("checkup/{id}")                                             // get mapping annotation
+	 @GetMapping("/checkup/{id}")                                             // get mapping annotation
 	  public ObjectNode getAccount(@PathVariable(value="id") String checkupId) {
 	  return fullCheckupService.getCheckupData(checkupId);
 	   }

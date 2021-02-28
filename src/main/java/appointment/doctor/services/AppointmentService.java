@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -99,6 +100,38 @@ public class AppointmentService {
 			e.printStackTrace();
 		}		
 		return null;
+	}
+
+
+	public ResponseEntity<String> updateAppointment(Appointments appointment, String id) {
+		Optional<Appointments> existingUser = this.appointmentsRepository.findById(id);
+		if( !existingUser.isPresent()) {
+			return new ResponseEntity<String>("Cannot delete", HttpStatus.UNAUTHORIZED);
+
+		}	
+				
+		Appointments appointments = existingUser.get();
+		
+		
+		
+		
+		this.appointmentsRepository.save(appointments);
+
+		return new ResponseEntity<String>("Successfullu updated your details", HttpStatus.OK);
+	}
+
+
+	public ResponseEntity<String> deleteAppointment(String id) {
+		Optional<Appointments> existingUser = this.appointmentsRepository.findById(id);
+		if( !existingUser.isPresent()) {
+			return new ResponseEntity<String>("Not a valid appointment", HttpStatus.UNAUTHORIZED);
+
+		}		
+		
+		Appointments appointments = existingUser.get();
+
+		this.appointmentsRepository.delete(appointments);
+		return ResponseEntity.ok().build();
 	}
 
 
