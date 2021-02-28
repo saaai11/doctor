@@ -3,17 +3,18 @@ package appointment.doctor.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import appointment.doctor.Util.ResponseUtil;
+import appointment.doctor.dto.UserRegistrationDTO;
 import appointment.doctor.entities.UserRegistration;
-
 import appointment.doctor.repository.UsersRepository;
 
 @Service
@@ -42,7 +43,7 @@ public String saveUserData(UserRegistration user) {
 
 		try {
 			
-			while( !userRepository.findById(userId).isEmpty()) {
+			while( userRepository.findById(userId).isPresent()) {
 		    	  accountNumber =  (int)(Math.random() * (max - min + 1) + min);  
 		      }
 
@@ -67,10 +68,7 @@ public String saveUserData(UserRegistration user) {
 
  public ObjectNode getUserAccount(String userId) {
 	 
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		ObjectNode createResponse = objectMapper.createObjectNode();
-
+		ObjectNode createResponse = JsonNodeFactory.instance.objectNode();
 
 		Optional<UserRegistration> existingUser = this.userRepository.findById(userId);
 		if( !existingUser.isPresent()) {
@@ -80,18 +78,16 @@ public String saveUserData(UserRegistration user) {
 			return createResponse;
 
 		}	
-		
-		
-				
+					
 		UserRegistration userRegistration = existingUser.get();
 		
-		 createResponse.put("status", "valid");
-		 try {
-			createResponse.put("data", objectMapper.writeValueAsString(userRegistration));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		 UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+		 
+		BeanUtils.copyProperties(userRegistration,userRegistrationDTO);
+		
+		ResponseUtil.createResponse(userRegistration,userRegistrationDTO);
+		createResponse.putPOJO("data", userRegistrationDTO);
+		    createResponse.put("status", "valid");
 		 return createResponse;
 				 
 	} 
