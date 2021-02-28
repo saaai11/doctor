@@ -1,12 +1,25 @@
-package appointment.entities;
+package appointment.doctor.entities;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "users")
 public class UserRegistration {
+	
+	@Id
+	@Column(name = "userid")
+	private String userId;
 	
 	@Column(name="firstname")
 	private String firstName;
@@ -21,13 +34,30 @@ public class UserRegistration {
 	private long mobile;
 	
 	@Column(name = "gender")
-	private boolean gender;
+	private String gender;
 	
 	@Column(name = "password")
 	private String password;
+	
+	 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonManagedReference(value = "user")
+	private List<Address> address;
+	
+	
 
-	@Column(name = "userid")
-	private String userId;
+	
+	
+
+	
+
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -61,11 +91,11 @@ public class UserRegistration {
 		this.mobile = mobile;
 	}
 
-	public boolean isGender() {
+	public String isGender() {
 		return gender;
 	}
 
-	public void setGender(boolean gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
